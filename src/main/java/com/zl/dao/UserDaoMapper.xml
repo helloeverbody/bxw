@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.dao.UserDao">
+	 <!-- 用户表与角色表的级联查询 -->
+	<resultMap type="user" id="userAndRole">
+		<id column="id" property="id"/>
+		<result column="userId" property="user_id"/>
+		<result column="psd" property="psd"/>
+		<result column="name" property="name"/>
+		<result column="roleId" property="role_id"/>
+		<association property="role" column="role" javaType="role"  select="com.zl.dao.RoleDao.userAndRole"></association>
+	</resultMap>
+	<!-- 登录 -->
+	 <select id="userLogin" parameterType="user" resultMap="userAndRole">
+	 	select name,psd from user where name=#{name} and psd=#{psd}
+	 </select>
+	 <!-- 查询所有会员,可用于注册时检查是否存在同名用户 -->
+	 <select id="querryAllUser" parameterType="user" resultMap="userAndRole">
+	 select u.id id,u.user_id userId,u.psd pad,u.name name,u.role_id roleId from user u
+	 </select>
+	 <!-- 通过会员ID 查询会员 -->
+	 <select id="querryUserById" parameterType="int" resultMap="userAndRole">
+	 select u.id id,u.user_id userId,u.psd pad,u.name name,u.role_id roleId from user u where u.id=#{id}
+	 </select>
+	 <!-- 通过会员ID 查询会员 个人信息级联 -->
+	 <select id="pAndu" parameterType="int" resultType="user">
+	 select u.id id,u.user_id userId,u.psd pad,u.name name,u.role_id roleId from user u where u.id=#{id}
+	 </select>
+	 <!-- 更新用户信息 ,修改用户角色-->
+	 <update id="updateUser" parameterMap="userAndRole">
+	 	update user 
+	 	<trim suffixOverrides="," prefix="set">
+	 		<if test="roleId!=null">role_id=#{roleId},</if>
+	 	</trim>
+	 	where id=#{id}
+	 </update>
+	 <!-- 注册用户模块 ,userId的添加与用户的ID一致-->
+	 <insert id="userRegister" parameterType="user">
+		insert into user(name,psd) values (#{name},#{psd})
+	 </insert>
+</mapper>

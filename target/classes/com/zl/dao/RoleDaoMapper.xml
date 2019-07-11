@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.dao.RoleDao">
+	<!-- 此处用户关联会员表 -->
+	<select id="userAndRole" parameterType="int" resultType="role">
+		select r.id id,r.role_name roleName,r.role_type roleType,r.ispsaa isPass from role r where r.id=#{id}
+	</select>
+	<!-- 要添加的角色 -->
+	 <insert id="addRole" parameterType="role">
+		insert into role(role_name,role_type,ispass) values (#{roleName},#{roleType},#{isPass})
+	 </insert>
+	 <!-- 通过id查询角色信息 -->
+	 <select id="querryById" parameterType="int" resultType="role">
+	 select r.id id,r.role_name roleName,r.role_type roleType,r.ispass isPass from role r where r.id=#{id}
+	 </select>
+	 <!-- 更新结果 -->
+	 <update id="updateRole" parameterType="role">
+	 	update role 
+	 	<trim suffixOverrides="," prefix="set">
+	 		<if test="roleName!=null and roleName!=''">role_name=#{roleName},</if>
+	 		<if test="roleType!=null and roleType!=''">role_type=#{roleType},</if>
+	 		<if test="isPass!=null and isPass!=''">ispass=#{isPass},</if>
+	 	</trim>
+	 	where id=#{id}
+	 </update>
+</mapper>

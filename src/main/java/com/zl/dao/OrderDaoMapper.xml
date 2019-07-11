@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.dao.OrderDao">
+	<resultMap type="order" id="order">
+			<id column="id" property="id"/>
+			<result column="Order_time" property="orderTime"/>
+			<result column="Order_Number" property="orderNumber"/>
+			<result column="Order_status" property="orderStatus"/>
+			<result column="Pay_status" property="payStatus"/>
+			<association property="purchaser" column="Purchaser_id" javaType="user" 
+				select="com.zl.dao.UserDao.querryUserById"></association>
+			<association property="supplier" column="Supplier_id" javaType="user"
+				select="com.zl.dao.UserDao.querryUserById"></association>
+	</resultMap>
+	
+	<select id="querryOrderBySupplierId" resultMap="order">
+			SELECT * FROM order where Supplier_id=#{supplier.id}
+	</select>
+	
+	<select id="querryOrderByPurchaserId" resultMap="order">
+			SELECT * FROM order WHERE Purchaser_id=#{purchaser.id}
+	</select>
+	
+	<insert id="addOrder">
+			INSERT INTO order(
+				Purchaser_id,Supplier_id,Order_time
+				Order_Number,Order_status,Pay_status
+			)
+			VALUES(
+				#{purchaser.id},#{supplier.id},#{orderTime},
+				#{orderNumber},#{orderStatus},#{payStatus}
+			)
+	</insert>
+	
+	<select id="querryOrderById" resultMap="order">
+			SELECT * FROM order WHERE id=#{id}
+	</select>	
+
+	<update id="updateOrderStatusById">
+			UPDATE order SET
+			Order_status=#{orderStatus}
+			WHERE
+			id=#{id}
+	</update>	
+
+	<update id=""></update>
+</mapper>

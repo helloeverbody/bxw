@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.dao.EnterpriseDao">
+		<resultMap type="enterprise" id="enterprise">
+			<id column="id" property="id"/>
+			<result column="name" property="name"/>
+			<result column="address" property="address"/>
+			<result column="License_img" property="licenseImg"/>
+			<result column="Organization_img" property="organizationImg"/>
+			<result column="Tax_img" property="taxImg"/>
+			<result column="Office_img" property="officeImg"/>
+			<result column="Circulation_img" property="circulationImg"/>
+			<result column="Other_img1" property="otherImg1"/>
+			<result column="Other_img2" property="otherImg2"/>
+			<result column="Other_img3" property="otherImg3"/>
+			<result column="Other_img4" property="otherImg4"/>
+			<result column="Legal_name" property="legalName"/>
+			<result column="Operator_name" property="operatorName"/>
+			<result column="Operator_position" property="operatorPosition"/>
+			<result column="Operator_inf" property="operatorInf"/>
+			<association property="province" column="Province_id" javaType="province"
+				select="com.zl.dao.Province.querryProvinceById"></association>
+			<association property="city" column="City_id" javaType="city" 
+				select="com.zl.dao.CityDao.querryCityById"></association>
+			<association property="county" column="County_id" javaType="county" 
+				select="com.zl.dao.CountyDao.querryCountyById"></association>
+		</resultMap>
+		<!-- 通过会员的ID查询企业 -->
+		<select id="querryEnterpriseByUserId" resultMap="enterprise">
+				SELECT * FROM enterprise where user_id = #{user.id}
+		</select>
+		<!-- 注册企业 -->
+		<insert id="addEnterprise" parameterType="enterprise">
+				INSERT INTO enterprise (
+					name,Province_id,city_id,county_id,address,
+					License_img,Organization_img,Tax_img,Office_img,Circulation_img,
+					Other_img1,Other_img2,Other_img3,Other_img4,Legal_name,
+					Operator_name,Operator_position,Operator_inf,user_id
+				) 
+				VALUES(
+					#{name},#{province.id},#{city.id},#{county.id},#{county},
+					#{licenseImg},#{organizationImg},#{taxImg},#{officeImg},#{circulationImg},
+					#{otherImg1},#{otherImg2},#{otherImg3},#{otherImg4},#{legalName},
+					#{operatorName},#{operatorPosition},#{operatorInf},#{user.id}
+				)
+		</insert>
+		<!-- 更新企业信息 -->
+		<update id="updateEnpterprise" parameterType="enterprise">
+			UPDATE enterprise
+			<trim prefix="SET" suffixOverrides=",">
+					name=#{name},
+					<if test="provice!=null">
+						Province_id=#{province.id},
+					</if>
+					<if test="city!=null">
+						city_id=#{city.id},
+					</if>
+					<if test="county!=null">
+						county_id=#{county.id},
+					</if>
+					address=#{address},
+					License_img=#{licenseImg},
+					Organization_img=#{organizationImg},
+					Tax_img=#{taxImg},
+					Office_img=#{officeImg},
+					Circulation_img=#{circulationImg},
+					Other_img1=#{otherImg1},
+					Other_img2=#{otherImg2},
+					Other_img3=#{otherImg3},
+					Other_img4=#{otherImg4},
+					Legal_name=#{legalName},
+					Operator_name=#{operatorName},
+					Operator_position=#{operatorPosition},
+					Operator_inf=#{operatorInf},
+			</trim>
+			where id=#{id} 
+			<if test="user!=null">
+				and user_id=#{user.id}
+			</if>
+		</update>
+				
+</mapper>

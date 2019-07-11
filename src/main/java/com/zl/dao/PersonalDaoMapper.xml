@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.dao.PersonalDao">
+		 <!-- 个人信息表与用户表的级联查询 -->
+	<resultMap type="user" id="pAndu">
+		<id column="id" property="id"/>
+		<result column="realName" property="real_name"/>
+		<result column="idcard" property="idcard"/>
+		<result column="idcardImg" property="idcard_img"/>
+		<result column="address" property="address"/>
+		<result column="phoneNumber" property="phone_number"/>
+		<result column="email" property="email"/>
+		<result column="telephone" property="telephone"/>
+		<result column="userId" property="user_id"/>
+		<association property="user" column="user" javaType="user"  select="com.zl.dao.UserDao.pAndu"></association>
+	</resultMap>
+		<!-- 根据id查询个人信息 -->
+		<select id="queryPersonalById" parameterType="int" resultMap="pAndu">
+	 		select p.id id,p.real_name realName,p.idcard idcard,p.idcard_img idcardImg,p.address address,p.phone_number phoneNumber,p.email email,p.telehone telephone,p.user_id from personal p where p.id=#{id}
+	    </select>
+	    <!-- 添加个人信息 -->
+	    <insert id="addPersonal" parameterType="personal">
+		insert into personal(real_name,idcard,idcard_img,address,phone_number,email,telephone,user_id) values (#{realName},#{idcard},#{idcardImg},#{address},#{phoneNumber},#{email},#{telephone},#{user_id})
+	    </insert>
+	    <!-- 根据id修改信息   未完   -->
+	    <update id="updateRole" parameterMap="pAndu">
+	 	update personal 
+	 	 <trim suffixOverrides="," prefix="set">
+	 		<if test="realName!=null and realName!=''">real_name=#{realName},</if>
+	 		<if test="idcard!=null and idcard!=''">idcard=#{IDcard},</if>
+	 		<if test="idcardImg!=null and idcardImg!=''">idcard_img=#{idcardImg},</if>
+	 		<if test="address!=null and address!=''">address=#{address},</if>
+	 		<if test="idcard!=null and idcard!=''">idcard=#{IDcard},</if>
+	 		<if test="phoneNumber!=null">phone_number=#{phoneNumber},</if>
+	 		<if test="email!=null and email!=''">email=#{email},</if>
+	 		<if test="telephone!=null and telephone!=''">telephone=#{telephone},</if>
+	 		<if test="userId!=null">user_id=#{userId},</if>
+	 	</trim>
+	 	where id=#{id}
+	    </update>
+</mapper>

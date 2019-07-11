@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zl.dao.BiddingPriceDao">
+	<!-- 竞价表和采购单表、用户表、资源表、省份表的级联查询 -->
+	 <resultMap type="biddingPrice" id="biddingPrice">
+	 	<id property="id" column="id"/>
+	 	<result property="quoter" column="quoter"/>
+	 	<result property="phoneNumber" column="Phone_number"/>
+	 	<!-- 和用户表级联查询 -->
+	 	<association property="user" column="user_Id" javaType="user" 
+	 	select="com.zl.dao.UserDao.querryUserById"></association>
+	 	<!-- 和采购单表级联查询 -->
+	 	<association property="purchase" column="purchase_Id" javaType="purchase" 
+	 	select="com.zl.dao.Purchase."></association>
+	 	<!-- 和资源表级联查询 -->
+	 	<association property="" column="" javaType="" 
+	 	select="com.zl.dao.Dao."></association>
+	 	<!-- 和省份表级联查询 -->
+	 	<association property="" column="" javaType="" 
+	 	select="com.zl.dao.Dao."></association>
+	 </resultMap>
+</mapper>
